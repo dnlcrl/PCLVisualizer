@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
  
-project(PCL_openni_viewer)
-target_link_libraries (openniViewer ${PCL_LIBRARIES})
+project(PCLVisualizer)
+target_link_libraries (PCLVisualizer ${PCL_LIBRARIES})
 
 #it seems it's needed only on OS X 10.9
 find_package(GLEW REQUIRED)
@@ -19,7 +19,7 @@ file(GLOB PCL_openni_viewer_SRC
     "src/*.h"
     "src/*.cpp"
 )
-add_executable(openniViewer ${PCL_openni_viewer_SRC})
+add_executable(PCLVisualizer ${PCL_openni_viewer_SRC})
 
 #add this line to solve probem in mac os x 10.9
-target_link_libraries(openniViewer ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_FEATURES_LIBRARIES}) 
+target_link_libraries(PCLVisualizer ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_FEATURES_LIBRARIES}) 
