@@ -1,21 +1,18 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Build Directory
+/build
 
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
-*.lib
 
-# Executables
-*.exe
-*.out
-*.app
+# Autoasve files
+*.autosave
+
+# pcd and onis
+*.pcd
+*.oni
