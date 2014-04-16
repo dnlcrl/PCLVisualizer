@@ -16,3 +16,6 @@
 # pcd and onis
 *.pcd
 *.oni
+
+# doc
+*.doc/
