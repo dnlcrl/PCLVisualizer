@@ -9,6 +9,7 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/visualization/cloud_viewer.h>
 #include <pcl/console/parse.h>
 
 // --------------
@@ -21,6 +22,7 @@ printUsage (const char* progName)
             << "Options:\n"
             << "-------------------------------------------\n"
             << "-h           this help\n"
+            << "-f           Load from test.pcd\n"
             << "-s           Simple visualisation example\n"
             << "-r           RGB colour visualisation example\n"
             << "-c           Custom colour visualisation example\n"
@@ -235,9 +237,15 @@ main (int argc, char** argv)
     printUsage (argv[0]);
     return 0;
   }
-  bool simple(false), rgb(false), custom_c(false), normals(false),
+  bool file(false), simple(false), rgb(false), custom_c(false), normals(false),
     shapes(false), viewports(false), interaction_customization(false);
-  if (pcl::console::find_argument (argc, argv, "-s") >= 0)
+  if (pcl::console::find_argument (argc, argv, "-f") >= 0)
+  {
+    file = true;
+    std::cout << "Exctract pointcloud from test.pcd\n";
+
+  }
+  else if (pcl::console::find_argument (argc, argv, "-s") >= 0)
   {
     simple = true;
     std::cout << "Simple visualisation example\n";
@@ -284,8 +292,31 @@ main (int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr basic_cloud_ptr (new pcl::PointCloud<pcl::PointXYZ>);
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
   std::cout << "Genarating example point clouds.\n\n";
+  if (file)
+  {
+    std::cout << "dbg";
+    if (pcl::io::loadPCDFile<pcl::PointXYZ> ("test.pcd", *basic_cloud_ptr) == -1) //* load the file
+    {
+      PCL_ERROR ("Couldn't read file test.pcd \n");
+      return (-1);
+    }
+    std::cout << "Loaded "
+              << basic_cloud_ptr->width * basic_cloud_ptr->height
+              << " data points from test_pcd.pcd" //with the following fields: "
+              << std::endl;
+    // The mapping tells you to what points of the old cloud the new ones correspond,
+    // but we will not use it.
+    //std::vector<int> mapping;
+    //pcl::removeNaNFromPointCloud(*basic_cloud_ptr, *basic_cloud_ptr, mapping);
+   
+    // Save it back.
+    //pcl::io::savePCDFileASCII(argv[2], *basic_cloud_ptr);
+
+  }
   // We're going to make an ellipse extruded along the z-axis. The colour for
   // the XYZRGB cloud will gradually go from red to green to blue.
+  else
+  {
   uint8_t r(255), g(15), b(15);
   for (float z(-1.0); z <= 1.0; z += 0.05)
   {
@@ -321,7 +352,7 @@ main (int argc, char** argv)
   basic_cloud_ptr->height = 1;
   point_cloud_ptr->width = (int) point_cloud_ptr->points.size ();
   point_cloud_ptr->height = 1;
-
+  }
   // ----------------------------------------------------------------
   // -----Calculate surface normals with a search radius of 0.05-----
   // ----------------------------------------------------------------
@@ -341,7 +372,7 @@ main (int argc, char** argv)
   ne.compute (*cloud_normals2);
 
   boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
-  if (simple)
+  if (simple || file)
   {
     viewer = simpleVis(basic_cloud_ptr);
   }
